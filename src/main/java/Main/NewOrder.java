@@ -16,7 +16,6 @@ public class NewOrder
     {
         var producer = new KafkaProducer<String, String>(properties());
 
-
         var value = "123,234,345";
         var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value);
 
