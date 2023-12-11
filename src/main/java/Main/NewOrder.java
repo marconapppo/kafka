@@ -1,9 +1,6 @@
 package Main;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.metrics.stats.Value;
 import org.apache.kafka.common.serialization.StringSerializer;
 
@@ -19,14 +16,27 @@ public class NewOrder
         var value = "123,234,345";
         var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value);
 
-        producer.send(record, (data, ex) -> {
-            if(ex != null){
+        var callback = getCallback();
+
+        var email = "Welcome! Processing email...... ";
+        var emailRecord = new ProducerRecord<String, String>("ECOMMERCE_SEND_EMAIL", email, email);
+
+        producer.send(record, callback).get();
+        producer.send(emailRecord, callback).get();
+    }
+
+    private static Callback getCallback()
+    {
+        return (data, ex) ->
+        {
+            if (ex != null)
+            {
                 ex.printStackTrace();
                 return;
             }
             System.out.println("sucesso " + data.topic() + ":::partition" + data.partition() +
                     "/ offset " + data.offset() + "/ timestamp " + data.timestamp());
-        }).get();
+        };
     }
 
     private static Properties properties(){
