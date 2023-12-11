@@ -56,6 +56,7 @@ public class FraudDetectorService
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, FraudDetectorService.class.getSimpleName());
+        properties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1"); /* Consumir de 1 em 1, evitar conflito */
         return properties;
     }
 }
